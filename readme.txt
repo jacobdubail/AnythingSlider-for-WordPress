@@ -8,9 +8,9 @@ Tags: wp, jquery, slider
 Author URI: http://jacobdubail.com/
 Author: Jacob Dubail
 Requires at least: 3.0
-Tested up to: 3.2RC1
-Stable tag: 0.2
-Version: 0.2
+Tested up to: 3.2-RC1
+Stable tag: 0.3
+
 
 Integrates Chris Coyier's popular AnythingSlider jQuery plugin with WordPress.  
 
@@ -40,6 +40,15 @@ test
 4. A slideshow on the homepage
 
 == Changelog ==
+
+= 0.3 =
+
+* More bug fixes
+* Support for custom CSS file - Add anythingslider.css to your theme folder or your theme's CSS folder (overrides the default CSS)
+* Cleaned up the settings page descriptions to be more clear/intuitive
+* Added a ton of options to the settings page
+* Added a few options to the shortcode
+* Improved documentation
 
 = 0.2 = 
 
