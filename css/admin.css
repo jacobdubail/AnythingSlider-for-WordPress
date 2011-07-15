@@ -1,9 +1,13 @@
 .anythingslider-holder    { margin-top: 25px; }
 
-.anythingslider-holder h3 { font-size: 15px; font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif; font-weight: normal; padding: 7px 10px; margin: 0; line-height: 1; background-color: #F1F1F1; border-bottom-color: #DFDFDF; text-shadow: white 0 1px 0; color: #464646;
+.anythingslider-holder > h3 { font-size: 15px; font-family: Georgia,"Times New Roman","Bitstream Charter",Times,serif; font-weight: normal; padding: 7px 10px; margin: 20px 0 0; line-height: 1; background-color: #F1F1F1; border-width: 1px; border-style: solid; border-color: #ececec #DFDFDF; text-shadow: white 0 1px 0; color: #464646; cursor: pointer;
 	-webkit-box-shadow: 0 1px 0 white;
 	   -moz-box-shadow: 0 1px 0 white;
 	        box-shadow: 0 1px 0 white;
+	-webkit-border-radius: 3px 3px 0 0;
+	 -khtml-border-radius: 3px 3px 0 0;
+	   -moz-border-radius: 3px 3px 0 0;
+	        border-radius: 3px 3px 0 0;
 	background-image: -webkit-gradient(linear,left top,left bottom,from(#F9F9F9),to(#ECECEC));
 	background-image: -webkit-linear-gradient(top,#F9F9F9,#ECECEC);
 	background-image:    -moz-linear-gradient(top,#F9F9F9,#ECECEC);
@@ -16,10 +20,10 @@
 	-webkit-box-shadow: inset 0 1px 0 white;
 	   -moz-box-shadow: inset 0 1px 0 white;
 	        box-shadow: inset 0 1px 0 white;
-	-webkit-border-radius: 3px;
-	 -khtml-border-radius: 3px;
-	   -moz-border-radius: 3px;
-	        border-radius: 3px;
+	-webkit-border-radius: 0 0 3px 3px;
+	 -khtml-border-radius: 0 0 3px 3px;
+	   -moz-border-radius: 0 0 3px 3px;
+	        border-radius: 0 0 3px 3px;
 	background-color: #F5F5F5;
 	background-image: -webkit-gradient(linear,left top,left bottom,from(#F9F9F9),to(#F5F5F5));
 	background-image: -webkit-linear-gradient(top,#F9F9F9,#F5F5F5);
@@ -29,5 +33,10 @@
 	background-image:         linear-gradient(top,#F9F9F9,#F5F5F5);
 }
 
-.description { margin-left: 15px; } 
-td label     { display: block; float: left; width: 40px; text-align: right; }
+.description    { margin-left: 15px; } 
+td label        { display: block; float: left; width: 40px; text-align: right; }
+.button-primary { margin-top: 20px; }
+
+.sidebar-name-arrow { width: 26px; height: 29px; float: right; display: inline-block; margin: -9px -10px 0 0; }
+
+.anythingslider-holder select[multiple]    { height: auto !important; }
