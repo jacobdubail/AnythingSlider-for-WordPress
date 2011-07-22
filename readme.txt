@@ -9,7 +9,7 @@ Author URI: http://jacobdubail.com/
 Author: Jacob Dubail
 Requires at least: 3.0
 Tested up to: 3.2
-Stable tag: 0.6.3
+Stable tag: 0.6.4
 
 
 Integrates Chris Coyier's popular AnythingSlider jQuery plugin with WordPress.  
@@ -26,6 +26,10 @@ Check out the <a href="http://wordpress.org/extend/plugins/anythingslider-for-wo
 
 
 = Changelog =
+
+= 0.6.4 =
+
+* Added options to the auto-insert function on Post and Pages *
 
 = 0.6.3 =
 
@@ -102,6 +106,10 @@ test
 4. A slideshow on the homepage
 
 == Changelog ==
+
+= 0.6.4 =
+
+* Added options to the auto-insert function on Post and Pages *
 
 = 0.6.3 =
 

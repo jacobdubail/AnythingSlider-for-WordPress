@@ -5,7 +5,7 @@ Plugin URI: http://wordpress.org/extend/plugins/anythingslider-for-wordpress/
 Description: Integrates Chris Coyier's popular AnythingSlider jQuery plugin with WordPress. Visit the <a href="options-general.php?page=anything_slider">Settings Page</a> for more options. Follow me on <a href="http://twitter.com/#!/jacobdubail" target="_blank">Twitter</a> for plugin updates and news.
 Author: Jacob Dubail
 Author URI: http://jacobdubail.com
-Version: 0.6.3
+Version: 0.6.4
 */
 
 
