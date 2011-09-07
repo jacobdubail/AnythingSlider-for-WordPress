@@ -1,10 +1,10 @@
 /*
- * AnythingSlider Slide FX 1.4 for AnythingSlider v1.5.8+
+ * AnythingSlider Slide FX 1.5.4 for AnythingSlider v1.5.8+
  * By Rob Garrison (aka Mottie & Fudgey)
  * Dual licensed under the MIT and GPL licenses.
  */
 (function($) {
-	$.fn.anythingSliderFx = function(options){
+	$.fn.anythingSliderFx = function(effects, options){
 
 		// variable sizes shouldn't matter - it's just to get an idea to get the elements out of view
 		var wrap = $(this).closest('.anythingSlider'),
@@ -14,11 +14,11 @@
 			return {
 				// 'name' : [{ inFx: {effects}, { outFx: {effects} }, selector: []]
 				'top'    : [{ inFx: { top: 0 }, outFx: { top: '-' + (size || sliderHeight) } }],
-				'bottom' : [{ inFx: { bottom: 0 }, outFx: { bottom: (size || sliderHeight) } }],
+				'bottom' : [{ inFx: { top: 0 }, outFx: { top: (size || sliderHeight) } }],
 				'left'   : [{ inFx: { left: 0 }, outFx: { left: '-' + (size || sliderWidth) } }],
-				'right'  : [{ inFx: { right: 0 }, outFx: { right: (size || sliderWidth) } }],
+				'right'  : [{ inFx: { left: 0 }, outFx: { left: (size || sliderWidth) } }],
 				'fade'   : [{ inFx: { opacity: 1 }, outFx: { opacity: 0 } }],
-				'expand' : [{ inFx: { width: '100%', top: '0%', left: '0%' } , outFx: { width: (size || '10%'), top: '50%', left: '50%' } }],
+				'expand' : [{ inFx: { width: '100%', height: '100%', top: '0%', left: '0%' } , outFx: { width: (size || '10%'), height: (size || '10%'), top: '50%', left: '50%' } }],
 				'listLR' : [{ inFx: { left: 0, opacity: 1 }, outFx: [{ left: (size || sliderWidth), opacity: 0 }, { left: '-' + (size || sliderWidth), opacity: 0 }], selector: [':odd', ':even'] }],
 				'listRL' : [{ inFx: { left: 0, opacity: 1 }, outFx: [{ left: (size || sliderWidth), opacity: 0 }, { left: '-' + (size || sliderWidth), opacity: 0 }], selector: [':even', ':odd'] }],
 
@@ -31,20 +31,18 @@
 
 		return this.each(function(){
 
-			var baseFx = getBaseFx(), // get base FX with standard sizes
-			defaults = {
-				easing  : 'swing',
-				timeIn  : 400,
-				timeOut : 350
-			},
+			$(this).data('AnythingSlider').fx = effects; // store fx list to allow dynamic modification
 
-			// hide caption using setTimeout to ensure slider_complete has fired and activePage class has been added.
-			// this hides element if out of the viewport (prevents captions - right & left only - from overlapping current window)
-			hideOffscreen = function(el){
-				el.each(function(){
-					if (!$(this).closest('.panel').is('.activePage')) { $(this).css('visibility','hidden'); }
-				});
-			},
+			var defaults = $.extend({
+				easing     : 'swing', // Default FX easing
+				timeIn     : 400,     // Default time for in FX animation
+				timeOut    : 350,     // Default time for out FX animation - when using predefined FX, this number gets divided by 2
+				stopRepeat : false,   // stops repeating FX animation when clicking on the same navigation tab
+				outFxBind  : 'slide_init',    // When outFx animations are called
+				inFxBind   : 'slide_complete' // When inFx animations are called
+			}, options),
+
+			baseFx = getBaseFx(), // get base FX with standard sizes
 
 			// Animate FX
 			animateFx = function(el, opt, isOut, time){
@@ -52,29 +50,23 @@
 				var o = opt[0] || opt,
 					s = o[1] || '',
 					// time needs to be a number, not a string
-					t = parseInt( ((s === '') ? o.duration : o[0].duration), 10);
+					t = time || parseInt( ((s === '') ? o.duration : o[0].duration), 10);
 				if (isOut) {
 					// don't change caption position from absolute
 					if (el.css('position') !== 'absolute') { el.css({ position : 'relative' }); }
 					el.stop();
 					// multiple selectors for out animation
 					if (s !== ''){
-						// Out animation is set to 1/4 of the time of the in animation
-						el.filter(opt[1][0]).animate(o[0], { queue : false, duration : (time || t)/4, easing : o[0].easing });
-						el.filter(opt[1][1]).animate(s, { queue : true, duration : (time || t)/4, easing : o[0].easing, complete: function(){
-							setTimeout(function(){ hideOffscreen(el); }, 0); // animation complete... bug report: http://bugs.jquery.com/ticket/7157
-						} });
+						el.filter(opt[1][0]).animate(o[0], { queue : false, duration : t, easing : o[0].easing });
+						el.filter(opt[1][1]).animate(s, { queue : true, duration : t, easing : o[0].easing });
 						return;
 					}
 				}
 				// animation for no extra selectors
-				if (!isOut) { el.css('visibility','visible').show(); }
-				el.animate(o, { queue : true, duration : time || t, easing : o.easing, complete: function(){
-					if (isOut) { setTimeout(function(){ hideOffscreen(el); }, 0); }
-				} });
+				el.animate(o, { queue : true, duration : t, easing : o.easing });
 			},
 
-			// Extract FX from options
+			// Extract FX
 			getFx = function(opts, isOut){
 				// example: '.textSlide h3' : [ 'top fade', '200px' '500', 'easeOutBounce' ],
 				var tmp, bfx2,
@@ -97,61 +89,70 @@
 				$.each(fx, function(i,f){
 					// check if built-in effect exists
 					if (baseFx.hasOwnProperty(f)) {
-						var t = typeof opts[1] === 'undefined',
+						var t = typeof opts[1] === 'undefined' || opts[1] === '',
 							n = (f === 'fade') ? 1 : 2; // if 2nd param defined, but it's not a size ('200px'), then use it as time (for fade FX)
 						// if size option is defined, get new base fx
 						tmp = (t) ? baseFx : getBaseFx(opts[1]);
 						$.extend(true, bfx, tmp[f][0][ex]);
-						bfx.duration = opts[n] || bfx.duration || time; // user set time || built-in time || default time set above
-						bfx.easing = opts[n+1] || defaults.easing;
+						t = opts[n] || bfx.duration || time; // user set time || built-in time || default time set above
+						bfx.duration = (isOut) ? t/2 : t; // out animation time is 1/2 of in time for predefined fx only
+						bfx.easing = isNaN(opts[n+1]) ? opts[n+1] || defaults.easing : opts[n+2] || defaults.easing;
 					}
 				});
 				return [bfx];
-			};
+			},
 
-			$(this)
+			base = $(this)
 
 			// bind events for "OUT" effects - occur when leaving a page
-			.bind('slide_init', function(e, slider){
-				var el, elOut, time, page = slider.$lastPage.add( slider.$items.eq(slider.exactPage) );
+			.bind(defaults.outFxBind, function(e, slider){
+				if (defaults.stopRepeat && slider.$lastPage[0] === slider.$targetPage[0]) { return; }
+				var el, elOut, time, page = slider.$lastPage.add( slider.$items.eq(slider.exactPage) ).add( slider.$targetPage ),
+				FX = slider.fx; // allow dynamically added FX
 				if (slider.exactPage === 0) { page = page.add( slider.$items.eq( slider.pages ) ); } // add last (non-cloned) page if on first
 				if (slider.options.animationTime < defaults.timeOut) {
 					time = slider.options.animationTime || 1; // if time = zero, make it 1... (0 || 1 === 1) // true )
 				}
 				page = page.find('*').andSelf(); // include the panel in the selectors
-				for (el in options) {
+				for (el in FX) {
 					if (el === 'outFx') {
 						// process "out" custom effects
-						for (elOut in options.outFx) {
+						for (elOut in FX.outFx) {
 							// animate current/last slide, unless it's a clone, then effect the original
-							if (page.filter(elOut).length) { animateFx( page.filter(elOut), options.outFx[elOut], true); }
+							if (page.filter(elOut).length) { animateFx( page.filter(elOut), FX.outFx[elOut], true); }
 						}
 					} else if (el !== 'inFx') {
 						// Use built-in effects
-						if ($.isArray(options[el]) && page.filter(el).length) {
-							animateFx( page.filter(el), getFx(options[el],true), true, time);
+						if ($.isArray(FX[el]) && page.filter(el).length) {
+							animateFx( page.filter(el), getFx(FX[el],true), true, time);
 						}
 					}
 				}
 			})
 
 			// bind events for "IN" effects - occurs on target page
-			.bind('slide_complete', function(e, slider){
-				var el, elIn, page = slider.$currentPage.add( slider.$items.eq(slider.exactPage) );
+			.bind(defaults.inFxBind, function(e, slider){
+				if (defaults.stopRepeat && slider.$lastPage[0] === slider.$targetPage[0]) { return; }
+				var el, elIn, page = slider.$currentPage.add( slider.$items.eq(slider.exactPage) ),
+				FX = slider.fx; // allow dynamically added FX
 				page = page.find('*').andSelf(); // include the panel in the selectors
-				for (el in options) {
+				for (el in FX) {
 					if (el === 'inFx') {
 						// process "in" custom effects
-						for (elIn in options.inFx) {
+						for (elIn in FX.inFx) {
 							// animate current page
-							if (page.filter(elIn).length) { animateFx( page.filter(elIn), options.inFx[elIn], false); }
+							if (page.filter(elIn).length) { animateFx( page.filter(elIn), FX.inFx[elIn], false); }
 						}
 						// Use built-in effects
-					} else if (el !== 'outFx' && $.isArray(options[el]) && page.filter(el).length) {
-						animateFx( page.filter(el), getFx(options[el],false), false);
+					} else if (el !== 'outFx' && $.isArray(FX[el]) && page.filter(el).length) {
+						animateFx( page.filter(el), getFx(FX[el],false), false);
 					}
 				}
-			});
+			})
+			.data('AnythingSlider');
+			// call gotoPage to trigger intro animation
+			// (occurs immediately after the slider and FX extension initialize)
+			base.gotoPage(base.currentPage, base.playing);
 
 		});
 	};

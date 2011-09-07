@@ -5,7 +5,7 @@ Plugin URI: http://wordpress.org/extend/plugins/anythingslider-for-wordpress/
 Description: Integrates Chris Coyier's popular AnythingSlider jQuery plugin with WordPress. Visit the <a href="options-general.php?page=anything_slider">Settings Page</a> for more options. Follow me on <a href="http://twitter.com/#!/jacobdubail" target="_blank">Twitter</a> for plugin updates and news.
 Author: Jacob Dubail
 Author URI: http://jacobdubail.com
-Version: 0.6.4
+Version: 0.6.4.5
 */
 
 
@@ -30,13 +30,13 @@ function jtd_insertjs_front() {
 	$easing  = $options['easing'];
 	
 	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'jquery.anythingslider', JTD_INSERTJS . '/jquery.anythingslider.min.js', array( 'jquery' ), '1.7.4' );
+	wp_enqueue_script( 'jquery.anythingslider', JTD_INSERTJS . '/jquery.anythingslider.min.js', array( 'jquery' ), '1.7.9' );
 	
 	
 	// If video is selected, load the video extension
 	if ( $video !== 'false' ) {
 	
-		wp_enqueue_script( 'jquery.anythingslider.video', JTD_INSERTJS . '/jquery.anythingslider.video.min.js', array( 'jquery' ), '1.7.4' );
+		wp_enqueue_script( 'jquery.anythingslider.video', JTD_INSERTJS . '/jquery.anythingslider.video.min.js', array( 'jquery' ), '1.7.9' );
 		wp_enqueue_script( 'swfobject', JTD_INSERTJS . '/swfobject.js', '', '2.2' );
 		
 	}
@@ -74,7 +74,7 @@ function jtd_insertcss_front() {
 	$options = get_option( 'jtd_anything_slides_options' );
 	$theme   = $options['theme'];
 			
-	wp_register_style( 'anythingslider-theme', JTD_INSERTCSS . '/theme-' . $theme . '.css', '', '1.7.2' );
+	wp_register_style( 'anythingslider-theme', JTD_INSERTCSS . '/theme-' . $theme . '.css', '', '1.7.9' );
 	
 	if ( $theme != '' && $theme != 'default' ) {
 		wp_enqueue_style( 'anythingslider-theme' );
@@ -185,16 +185,22 @@ function jtd_anythingslider_register_shortcodes() {
 
 function jtd_anything_slides_shortcode( $attr ) {
 	
+	// Add support for ordering the slides
+	$order         = ( $attr['order'] )   ? $attr['order']   : 'ASC';
+	$orderby       = ( $attr['orderby'] ) ? $attr['orderby'] : 'menu_order';
+	
+	
 	// setup slide query
 	$loop = new WP_Query(
 		array(
 			'post_type'      => 'anything_slides',
-			'orderby'        => 'menu_order',
-			'order'          => 'ASC',
+			'orderby'        => $attr['orderby'],
+			'order'          => $attr['order'],
 			'posts_per_page' => -1,
 			'slide_cat'      => $attr['cat']
 		)
 	);
+	
 	
 	$options        = get_option( 'jtd_anything_slides_options' );
 		
@@ -203,7 +209,8 @@ function jtd_anything_slides_shortcode( $attr ) {
 	$height         = ( isset( $attr['height'] ) )            ? $attr['height']                : ( ( $options['height'] )         ? $options['height']         : 300 );
 	$theme          = ( isset( $options['theme'] ) )          ? $options['theme']              : 'default';
 	$expand         = ( isset( $attr['expand'] ) )            ? $attr['expand']                : ( ( $options['expand'] )         ? $options['expand']         : 'false' );
-   $resizeContents = ( isset( $attr['resizeContents'] ) )    ? $attr['resizeContents']        : ( ( $options['resizeContents'] ) ? $options['resizeContents'] : 'true' );
+   $resizeContents = ( isset( $attr['resizeContents'] ) )    ? $attr['resizeContents']        : ( ( $options['resizeContents'] ) ? $options['resizeContents'] : 'true'  );
+   $vertical       = ( isset( $attr['vertical'] ) )          ? $attr['vertical']              : ( ( $options['vertical'] )       ? $options['vertical']       : 'false' );
    $showMultiple   = ( isset( $attr['showMultiple'] ) )      ? $attr['showMultiple']          : ( ( $options['showMultiple'] )   ? $options['showMultiple']   : 'false' );
    $easing         =	( isset( $options['easing'] ) )         ? $options['easing']             : 'swing';
   	
@@ -309,7 +316,7 @@ function jtd_anything_slides_shortcode( $attr ) {
 			$output      .= "<li>";
 			
 			if ( $content ) {
-				$output   .= "<div class='content clearfix'> {$content} </div>";
+				$output   .= "<div class='content clearfix'>" .  do_shortcode($content) . "</div>";
 			}
 			
 			$output      .= "</li>";
@@ -338,7 +345,8 @@ function jtd_anything_slides_shortcode( $attr ) {
 				
 				theme               : '{$theme}', 
 				expand              : {$expand},     
-				resizeContents      : {$resizeContents},      
+				resizeContents      : {$resizeContents},
+				vertical            : {$vertical},      
 				showMultiple        : {$showMultiple},     
 				easing              : '{$easing}',   
 				
@@ -482,6 +490,7 @@ function jtd_anything_slides_admin_settings() {
 	add_settings_field( 'jtd_anything_slides-theme',         '<label for="theme">Theme</label>',                     'jtd_anything_slides_theme_callback',        'anything_slider_appearance', 'jtd_anything_slides_option_section' );
 	add_settings_field( 'jtd_anything_slides-expand',        '<label for="expand">Expand</label>',                   'jtd_anything_slides_expand_callback',       'anything_slider_appearance', 'jtd_anything_slides_option_section' );
 	add_settings_field( 'jtd_anything_slides-resizeContents','<label for="resizeContents">Resize</label>',           'jtd_anything_slides_resize_callback',       'anything_slider_appearance', 'jtd_anything_slides_option_section' );
+	add_settings_field( 'jtd_anything_slides-vertical',      '<label for="vertical">Vertical</label>',               'jtd_anything_slides_vertical_callback',     'anything_slider_appearance', 'jtd_anything_slides_option_section' );
 	add_settings_field( 'jtd_anything_slides-showMultiple',  '<label for="showMultiple">Show Multiple</label>',      'jtd_anything_slides_showMultiple_callback', 'anything_slider_appearance', 'jtd_anything_slides_option_section' );
 	add_settings_field( 'jtd_anything_slides-easing',        '<label for="easing">Easing</label>',                   'jtd_anything_slides_easing_callback',       'anything_slider_appearance', 'jtd_anything_slides_option_section' );
 		
@@ -682,6 +691,13 @@ function jtd_anything_slides_resize_callback() {
 	echo "<label>Yes <input id='resizeContents' name='jtd_anything_slides_options[resizeContents]' type='radio' value='true'"  . checked( $resize, 'true', false ) . "/></label><br />";
 	echo "<label>No  <input id='resizeContents' name='jtd_anything_slides_options[resizeContents]' type='radio' value='false'" . checked( $resize, 'false', false ) . "/></label>";
 	echo "<span class='description'>If yes, solitary images/objects in the panel will expand to fit the viewport</span>";
+}
+function jtd_anything_slides_vertical_callback() {
+	$options  = get_option( 'jtd_anything_slides_options' );
+	$vertical = $options['vertical'];
+	echo "<label>Yes <input id='vertical' name='jtd_anything_slides_options[vertical]' type='radio' value='true'"  . checked( $vertical, 'true', false ) . "/></label><br />";
+	echo "<label>No  <input id='vertical' name='jtd_anything_slides_options[vertical]' type='radio' value='false'" . checked( $vertical, 'false', false ) . "/></label>";
+	echo "<span class='description'>If yes, all panels will slide vertically; they slide horizontally otherwise</span>";
 }
 function jtd_anything_slides_showMultiple_callback() {
 	$options  = get_option( 'jtd_anything_slides_options' );
@@ -1048,6 +1064,7 @@ function jtd_anything_slides_validate_options($input) {
 	$valid['theme']          = ( in_array( mysql_real_escape_string($input['theme']),          $themes ) )  ? $input['theme']           : 'default';
 	$valid['expand']         = ( in_array( mysql_real_escape_string($input['expand']),         $boolean ) ) ? $input['expand']          : 'false'; 
 	$valid['resizeContents'] = ( in_array( mysql_real_escape_string($input['resizeContents']), $boolean ) ) ? $input['resizeContents']  : 'false'; 
+	$valid['vertical']       = ( in_array( mysql_real_escape_string($input['vertical']),       $boolean ) ) ? $input['vertical']        : 'false'; 
 	$valid['showMultiple']   = preg_replace( '/[^0-9]/',        '', $input['showMultiple'] );
 	$valid['easing']         = ( in_array( mysql_real_escape_string($input['easing']),         $easing ) )  ? $input['easing']          : 'swing';
 	//$valid['easing']         = esc_html( $input['easing'] );
@@ -1113,51 +1130,6 @@ function jtd_anything_slides_validate_options($input) {
 	$valid['wmode']          = ( in_array( mysql_real_escape_string($input['wmode']),           $wmodes  ) ) ? $input['wmode']          : 'false'; 
 	
 		
-
-
-	/*
-	if( $valid['width'] != $input['width'] ) {
-		add_settings_error(
-			'jtd_anything_slides-width',
-			'jtd_anything_slides_texterror',
-			'Incorrect value entered!',
-			'error'
-		);		
-	}
-	if( $valid['height'] != $input['height'] ) {
-		add_settings_error(
-			'jtd_anything_slides-height',
-			'jtd_anything_slides_texterror',
-			'Incorrect value entered!',
-			'error'
-		);		
-	}
-	if( $valid['delay'] != $input['delay'] ) {
-		add_settings_error(
-			'jtd_anything_slides-delay',
-			'jtd_anything_slides_texterror',
-			'Incorrect value entered!',
-			'error'
-		);		
-	}
-	if( $valid['resume'] != $input['resume'] ) {
-		add_settings_error(
-			'jtd_anything_slides-resume',
-			'jtd_anything_slides_texterror',
-			'Incorrect value entered!',
-			'error'
-		);		
-	}
-	if( $valid['animation'] != $input['animation'] ) {
-		add_settings_error(
-			'jtd_anything_slides-animation',
-			'jtd_anything_slides_texterror',
-			'Incorrect value entered!',
-			'error'
-		);		
-	}
-*/
-
 	return $valid;
 }
 
@@ -1185,7 +1157,8 @@ function jtd_anything_slides_set_defaults() {
 				'height'              => '190',
 				'theme'               => "default", 
 				'expand'              => false,     
-				'resizeContents'      => true,      
+				'resizeContents'      => true, 
+				'vertical'            => false,     
 				'showMultiple'        => '1',     
 				'easing'              => "swing",   
 				

@@ -38,10 +38,12 @@ function jtd_anythingslider_insert_form_popup() {
 		    var resume    = jQuery("#resume").val();
 		    var animation = jQuery("#animation").val();
 		    var navFormat = ( jQuery("#nav_format").is(":checked") ) ? 'navFormat=true' : '';
+		    var order     = jQuery("#order").val();
+		    var orderby   = jQuery("#orderby").val();
 		
 		
 		    var win = window.dialogArguments || opener || parent || top;
-		    win.send_to_editor("[anything_slides " + cat_id + " width=" + width + " height=" + height + " " + navFormat + " delay=" + delay + " resume=" + resume + " animation=" + animation + "]");
+		    win.send_to_editor("[anything_slides " + cat_id + " width=" + width + " height=" + height + " " + navFormat + " delay=" + delay + " resume=" + resume + " animation=" + animation + " order=" + order + " orderby=" + orderby + "]");
 		}
 	</script>
 
@@ -103,6 +105,38 @@ function jtd_anythingslider_insert_form_popup() {
 			<th scope="row"><label for="animation">Animation Time</label></th>
 			<td><input type="number" id="animation" name="animation" value="<?php echo $options['animation']; ?>" /></td>
 			<th scope="row"><em>How long the slideshow transition takes (in milliseconds)</em></th>
+		</tr>
+		
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		
+		<tr class="form-field">
+			<th scope="row"><label for="order">Slide Order</label></th>
+			<td>
+				<select id="order" name="order">
+					<option value="ASC">Ascending</option>
+					<option value="DESC">Descending</option>
+				</select>
+			</td>
+			<th scope="row"><em>top to bottom or bottom to top</em></th>
+		</tr>
+		
+		<tr class="form-field">
+			<th scope="row"><label for="orderby">Slide Sort</label></th>
+			<td>
+				<select id="orderby" name="orderby">
+					<option value="menu_order">Menu Order</option>
+					<option value="title">Title</option>
+					<option value="rand">Random</option>
+					<option value="date">Date</option>
+					<option value="modified">Modified</option>
+					<option value="title">Title</option>
+					<option value="ID">ID</option>
+					<option value="author">Author</option>
+				</select>
+			</td>
+			<th scope="row"><em><a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">Codex for details</a></em></th>
 		</tr>
 		
 		<tr>

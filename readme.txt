@@ -1,6 +1,6 @@
 === AnythingSlider for WordPress ===
 
-Contributors: jacobdubail, Chris Coyier, ProLoser, Mottie, Doug Neiner
+Contributors: jacobdubail, chriscoyier, ProLoser, Mottie, Doug Neiner
 Plugin Name: AnythingSlider for WordPress
 Plugin URI: http://jacobdubail.com/anythingslider-for-wordpress
 Donate Link: http://jacobdubail.com
@@ -8,13 +8,15 @@ Tags: wp, jquery, slider
 Author URI: http://jacobdubail.com/
 Author: Jacob Dubail
 Requires at least: 3.0
-Tested up to: 3.2
-Stable tag: 0.6.4
+Tested up to: 3.2.1
+Stable tag: 0.6.4.5
 
 
 Integrates Chris Coyier's popular AnythingSlider jQuery plugin with WordPress.  
 
 == Description ==
+
+<iframe src="http://player.vimeo.com/video/25520290?byline=0&amp;portrait=0" width="540" height="459" frameborder="0"></iframe>
 
 AnythingSlider for WordPress integrates Chris Coyier's popular AnythingSlider jQuery plugin with WordPress.  
 
@@ -27,6 +29,23 @@ Check out the <a href="http://wordpress.org/extend/plugins/anythingslider-for-wo
 
 = Changelog =
 
+= 0.6.4.5 =
+
+* Added an option for sliding vertically *
+* Updated plugin script to version 1.7.9 *
+
+= 0.6.4.4 =
+
+* Added options to the auto-insert function on Posts and Pages for order and orderby *
+
+= 0.6.4.3 =
+
+* Added options to shortcode for order and orderby *
+
+= 0.6.4.2 =
+
+* Updated plugin script to version 1.7.8 *
+
 = 0.6.4 =
 
 * Added options to the auto-insert function on Post and Pages *
@@ -34,7 +53,7 @@ Check out the <a href="http://wordpress.org/extend/plugins/anythingslider-for-wo
 = 0.6.3 =
 
 * Added an ajax form to auto-insert a slideshow into a post or page *
-* Updated plugin script to verstion 1.7.4 *
+* Updated plugin script to version 1.7.4 *
 
 = 0.6.2 =
 
@@ -54,37 +73,6 @@ Check out the <a href="http://wordpress.org/extend/plugins/anythingslider-for-wo
 * Fixed a bug with the video extension script loader *
 * Updated a few options that are included or deprecated in version 1.7.1 of the jQuery plugin *
 
-= 0.5.1 =
-
-* Update JS to latest version of the jQuery plugin *
-
-= 0.5 = 
-
-* Fixed an error when loading custom CSS from Theme directory.  Add anythingslider.css to your theme, if you'd like to use a custom CSS file.
-* Fixed an error with the new Video script.
-
-= 0.4 =
-
-* Upgraded to AnythingSlider 1.6
-* Added support for Video Playback options
-
-= 0.3 =
-
-* More bug fixes
-* Support for custom CSS file - Add anythingslider.css to your theme folder or your theme's CSS folder (overrides the default CSS)
-* Cleaned up the settings page descriptions to be more clear/intuitive
-* Added a ton of options to the settings page
-* Added a few options to the shortcode
-* Improved documentation
-
-= 0.2 = 
-
-* Many bug fixes
-* Added a variety of new global options
-
-= 0.1 =
-
-Initial release.  Many improvements to come!
 
 == Installation ==
 
@@ -106,6 +94,23 @@ test
 4. A slideshow on the homepage
 
 == Changelog ==
+
+= 0.6.4.5 =
+
+* Added an option for sliding vertically *
+* Updated plugin script to version 1.7.9 *
+
+= 0.6.4.4 =
+
+* Added options to the auto-insert function on Posts and Pages for order and orderby *
+
+= 0.6.4.3 =
+
+* Added options to shortcode for order and orderby *
+
+= 0.6.4.2 =
+
+* Updated plugin script to version 1.7.8 *
 
 = 0.6.4 =
 
@@ -207,4 +212,4 @@ If that's too confusing... which it probably is, check out a how-to video at <a 
 
 == Donations ==
 
-I happily made this plugin for the community.  As I improve it and add more features, I may ask for donations.  In the meantime, enjoy!
+I happily made this plugin for the community.  As I improve it and add more features, I may ask for donations.  In the meantime, enjoy!ns.  In the meantime, enjoy!
