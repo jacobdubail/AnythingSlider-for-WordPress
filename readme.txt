@@ -11,6 +11,8 @@ Requires at least: 3.0
 Tested up to: 3.2.1
 Stable tag: 0.6.4.5
 
+Abandonded plugin. Anyone want to adopt it?
+
 
 Integrates Chris Coyier's popular AnythingSlider jQuery plugin with WordPress.  
 
